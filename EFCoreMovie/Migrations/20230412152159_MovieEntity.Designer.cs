@@ -4,6 +4,7 @@ using EFCoreMovie;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace EFCoreMovie.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230412152159_MovieEntity")]
+    partial class MovieEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,9 +58,6 @@ namespace EFCoreMovie.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CinemaOfferId")
-                        .HasColumnType("int");
-
                     b.Property<Point>("Location")
                         .HasColumnType("geography");
 
@@ -72,35 +72,7 @@ namespace EFCoreMovie.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CinemaOfferId");
-
                     b.ToTable("Tbl_Cinema");
-                });
-
-            modelBuilder.Entity("EFCoreMovie.Entities.CinemaOfferEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Begin")
-                        .HasColumnType("date");
-
-                    b.Property<int>("CinemaId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("DiscountPercentage")
-                        .HasPrecision(5, 2)
-                        .HasColumnType("decimal(5,2)");
-
-                    b.Property<DateTime>("End")
-                        .HasColumnType("date");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Tbl_CinemaOffer");
                 });
 
             modelBuilder.Entity("EFCoreMovie.Entities.GenreEntity", b =>
@@ -147,15 +119,6 @@ namespace EFCoreMovie.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tbl_Movie");
-                });
-
-            modelBuilder.Entity("EFCoreMovie.Entities.CinemaEntity", b =>
-                {
-                    b.HasOne("EFCoreMovie.Entities.CinemaOfferEntity", "CinemaOffer")
-                        .WithMany()
-                        .HasForeignKey("CinemaOfferId");
-
-                    b.Navigation("CinemaOffer");
                 });
 #pragma warning restore 612, 618
         }

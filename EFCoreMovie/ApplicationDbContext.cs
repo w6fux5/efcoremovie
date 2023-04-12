@@ -15,6 +15,10 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<CinemaEntity> Tbl_Cinema { get; set; }
 
+    public DbSet<MovieEntity> Tbl_Movie { get; set; }
+    public DbSet<CinemaOfferEntity> Tbl_CinemaOffer { get; set; }
+
+
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -29,5 +33,15 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<CinemaEntity>().Property(p => p.Name).IsRequired().HasMaxLength(150);
         modelBuilder.Entity<CinemaEntity>().Property(p => p.Price).HasPrecision(precision: 9, scale: 2);
+
+        modelBuilder.Entity<MovieEntity>().Property(p => p.Title).IsRequired().HasMaxLength(250);
+        modelBuilder.Entity<MovieEntity>().Property(p => p.ReleaseDate).HasColumnType("date");
+        modelBuilder.Entity<MovieEntity>().Property(p => p.PosterURL).HasMaxLength(500);
+
+        modelBuilder.Entity<CinemaOfferEntity>().Property(p => p.DiscountPercentage).HasPrecision(5, 2);
+        modelBuilder.Entity<CinemaOfferEntity>().Property(p => p.Begin).HasColumnType("date");
+        modelBuilder.Entity<CinemaOfferEntity>().Property(p => p.End).HasColumnType("date");
+
+
     }
 }

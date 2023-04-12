@@ -13,4 +13,6 @@ public class CinemaEntity
     public decimal Price { get; set; }
 
     public Point Location { get; set; } // from NetTopologySuite.Geometries;
+
+    public CinemaOfferEntity CinemaOffer { get; set; }
 }

@@ -11,4 +11,11 @@ public class MovieEntity
     public DateTime ReleaseDate { get; set; }
 
     public string PosterURL { get; set; }
+
+    public HashSet<GenreEntity> Genres { get; set; }
+
+    public HashSet<CinemaHallEntity> CinemaHalls { get; set; }
+
+    public HashSet<MovieActorEntity> MoviesActors { get; set; }
+
 }

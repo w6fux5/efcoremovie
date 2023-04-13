@@ -15,4 +15,6 @@ public class ActorEntity
 
     [Column(TypeName = "Date")]
     public DateTime? DateOfBirth { get; set; } // 允許 null
+
+    public HashSet<MovieActorEntity> MoviesActors { get; set; }
 }

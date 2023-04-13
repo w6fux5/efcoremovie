@@ -18,7 +18,20 @@ public class AutoMapperProfiles : Profile
         CreateMap<GenreEntity, GenreDTO>();
 
         CreateMap<MovieEntity, MovieDTO>()
-            .ForMember(dto => dto.Cinemas, entity => entity.MapFrom(p => p.CinemaHalls.Select(ch => ch.Cinema)))
-            .ForMember(dto => dto.Actors, entity => entity.MapFrom(p => p.MoviesActors.Select(ma => ma.Actor)));
+            .ForMember(dto => dto.Genres, entity =>
+                entity.MapFrom(p =>
+                    p.Genres
+                        .OrderByDescending(g => g.Name)))
+
+            .ForMember(dto => dto.Cinemas, entity =>
+                entity.MapFrom(p =>
+                    p.CinemaHalls
+                        .OrderByDescending(ch => ch.Cinema.Name)
+                        .Select(ch => ch.Cinema)))
+
+            .ForMember(dto => dto.Actors, entity =>
+                entity.MapFrom(p =>
+                    p.MoviesActors
+                        .Select(ma => ma.Actor)));
     }
 }

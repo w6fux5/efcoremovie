@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using EFCoreMovie.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,14 +23,14 @@ public class MovieController : ControllerBase
     public async Task<ActionResult<MovieDTO>> Get(int id)
     {
         var movie = await _context.Tbl_Movie
-            .Include(m => m.Genres)
-            .Include(m => m.CinemaHalls)
-            .ThenInclude(ch => ch.Cinema)
+            .Include(m => m.Genres.OrderByDescending(g => g.Name))
+            .Include(m => m.CinemaHalls.OrderByDescending(ch => ch.Cinema.Name))
+                .ThenInclude(ch => ch.Cinema)
             .Include(m => m.MoviesActors)
-            .ThenInclude(ma => ma.Actor)
+                .ThenInclude(ma => ma.Actor)
             .FirstOrDefaultAsync(m => m.Id == id);
 
-        if(movie == null)
+        if (movie == null)
         {
             return NotFound();
         }
@@ -39,6 +40,43 @@ public class MovieController : ControllerBase
         movieDTO.Cinemas = movieDTO.Cinemas.DistinctBy(m => m.Id).ToList();
 
         return movieDTO;
+    }
+
+
+    [HttpGet("autoMapper/{id:int}")]
+    public async Task<ActionResult<MovieDTO>> GetWithAutoMapper(int id)
+    {
+        var movieDTO = await _context.Tbl_Movie
+            .ProjectTo<MovieDTO>(_mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(m => m.Id == id);
+
+        if (movieDTO is null)
+        {
+            return NotFound();
+        }
+
+
+        movieDTO.Cinemas = movieDTO.Cinemas.DistinctBy(m => m.Id).ToList();
+
+        return movieDTO;
+    }
+
+    [HttpGet("selectLoading/{id:int}")]
+    public async Task<ActionResult> GetSelectLoading(int id)
+    {
+        var movieDTO = await _context.Tbl_Movie.Select(m => new
+        {
+            Id = m.Id,
+            Title = m.Title,
+            Genres = m.Genres.Select(g => g.Name).OrderByDescending(n => n).ToList()
+        }).FirstOrDefaultAsync(m => m.Id == id);
+
+        if (movieDTO is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(movieDTO);
     }
 
 }

@@ -14,7 +14,7 @@ namespace EFCoreMovie.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20230413035649_CinemaHallType")]
-    partial class CinemaHallType
+    partial class CinemaHallTypeEnum
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

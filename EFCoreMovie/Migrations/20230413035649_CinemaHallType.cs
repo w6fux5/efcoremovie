@@ -5,7 +5,7 @@
 namespace EFCoreMovie.Migrations
 {
     /// <inheritdoc />
-    public partial class CinemaHallType : Migration
+    public partial class CinemaHallTypeEnum : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -1,4 +1,5 @@
 ﻿using EFCoreMovie.Entities;
+using EFCoreMovie.Entities.Seeding;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -20,6 +21,8 @@ public class ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+        Module3Seeding.Seed(modelBuilder);
     }
 
     public DbSet<GenreEntity> Tbl_Genre { get; set; }

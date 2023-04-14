@@ -13,14 +13,14 @@ public class MovieController : ControllerBase
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
 
-    public MovieController(ApplicationDbContext context, IMapper mapper)
+    public MovieController (ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<MovieDTO>> Get(int id)
+    public async Task<ActionResult<MovieDTO>> Get (int id)
     {
         var movie = await _context.Tbl_Movie
             .Include(m => m.Genres.OrderByDescending(g => g.Name))
@@ -44,7 +44,7 @@ public class MovieController : ControllerBase
 
 
     [HttpGet("autoMapper/{id:int}")]
-    public async Task<ActionResult<MovieDTO>> GetWithAutoMapper(int id)
+    public async Task<ActionResult<MovieDTO>> GetWithAutoMapper (int id)
     {
         var movieDTO = await _context.Tbl_Movie
             .ProjectTo<MovieDTO>(_mapper.ConfigurationProvider)
@@ -62,7 +62,7 @@ public class MovieController : ControllerBase
     }
 
     [HttpGet("selectLoading/{id:int}")]
-    public async Task<ActionResult> GetSelectLoading(int id)
+    public async Task<ActionResult> GetSelectLoading (int id)
     {
         var movieDTO = await _context.Tbl_Movie.Select(m => new
         {
@@ -78,5 +78,96 @@ public class MovieController : ControllerBase
 
         return Ok(movieDTO);
     }
+
+    [HttpGet("explicitLoading/{id:int}")]
+    public async Task<ActionResult<MovieDTO>> GetExplicit (int id)
+    {
+        var movie = await _context.Tbl_Movie.FirstOrDefaultAsync(m => m.Id == id);
+
+        if (movie is null)
+        {
+            return NotFound();
+        }
+
+        // await _context.Entry(movie).Collection(p => p.Genres).LoadAsync();  // 一般查詢
+
+        var genresCount = await _context.Entry(movie).Collection(p => p.Genres).Query().CountAsync();
+
+        var movieDTO = _mapper.Map<MovieDTO>(movie);
+
+        return Ok(new
+        {
+            id = movieDTO.Id,
+            Title = movieDTO.Title,
+            genresCount = genresCount,
+        });
+
+    }
+
+    [HttpGet("groupedByClinema")]
+    public async Task<ActionResult> GetGroupedByClinema ()
+    {
+        var groupedMovies = await _context.Tbl_Movie.GroupBy(m => m.InCinemas).Select(g => new
+        {
+            InCinemas = g.Key,
+            Count = g.Count(),
+            Movies = g.ToList()
+        }).ToListAsync();
+
+        return Ok(groupedMovies);
+    }
+
+
+    [HttpGet("groupedByGenresCount")]
+    public async Task<ActionResult> GetGroupedByGenresCount ()
+    {
+        var groupedByGenresCount = await _context.Tbl_Movie.GroupBy(m => m.Genres.Count()).Select(g => new
+        {
+            Count = g.Key,
+            Titles = g.Select(m => m.Title),
+            Genres = g.Select(m => m.Genres).SelectMany(a => a).Select(ge => ge.Name).Distinct()
+        }).ToListAsync();
+
+
+        return Ok(groupedByGenresCount);
+    }
+
+
+    [HttpGet("filter")]
+    public async Task<ActionResult<IEnumerable<MovieDTO>>> Filter ([FromQuery] MovieFilterDTO filter)
+    {
+        var moviesQueryable = _context.Tbl_Movie.AsQueryable();
+
+        if (!string.IsNullOrEmpty(filter.Title))
+        {
+            moviesQueryable = moviesQueryable
+                .Where(m => m.Title.Contains(filter.Title));
+        }
+
+        if (filter.InCinemas)
+        {
+            moviesQueryable = moviesQueryable
+                .Where(m => m.InCinemas == filter.InCinemas);
+        }
+
+        if (filter.UpComingReleases)
+        {
+            var today = DateTime.Today;
+            moviesQueryable = moviesQueryable
+                .Where(m => m.ReleaseDate >= today);
+        }
+
+        if (filter.GenredId != 0)
+        {
+            moviesQueryable = moviesQueryable
+                .Where(m => m.Genres.Select(g => g.Id).Contains(filter.GenredId));
+        }
+
+        var movies = await moviesQueryable.Include(m => m.Genres).ToListAsync();
+
+        return _mapper.Map<List<MovieDTO>>(movies);
+
+    }
+
 
 }

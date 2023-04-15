@@ -1,4 +1,5 @@
 ﻿using EFCoreMovie.Entities;
+using EFCoreMovie.Entities.Function;
 using EFCoreMovie.Entities.Keyless;
 using EFCoreMovie.Entities.Seeding;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,12 @@ public class ApplicationDbContext : DbContext
 
         Module3Seeding.Seed(modelBuilder);
         Module6Seeding.Seed(modelBuilder);
+        Module9Seeding.Seed(modelBuilder);
+
+        Scalars.RegisterFunctoins(modelBuilder);
     }
+
+
 
     public DbSet<GenreEntity> Tbl_Genre { get; set; }
 

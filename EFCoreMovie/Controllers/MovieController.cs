@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using EFCoreMovie.Dtos;
+using EFCoreMovie.Dtos.Movie;
+using EFCoreMovie.Entities;
+using EFCoreMovie.Entities.Keyless;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,20 +15,20 @@ public class MovieController : ControllerBase
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
 
-    public MovieController (ApplicationDbContext context, IMapper mapper)
+    public MovieController(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<MovieDTO>> Get (int id)
+    public async Task<ActionResult<MovieDTO>> Get(int id)
     {
         var movie = await _context.Tbl_Movie
             .Include(m => m.Genres.OrderByDescending(g => g.Name))
             .Include(m => m.CinemaHalls.OrderByDescending(ch => ch.Cinema.Name))
                 .ThenInclude(ch => ch.Cinema)
-            .Include(m => m.MoviesActors)
+            .Include(m => m.MovieActors)
                 .ThenInclude(ma => ma.Actor)
             .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -44,7 +46,7 @@ public class MovieController : ControllerBase
 
 
     [HttpGet("autoMapper/{id:int}")]
-    public async Task<ActionResult<MovieDTO>> GetWithAutoMapper (int id)
+    public async Task<ActionResult<MovieDTO>> GetWithAutoMapper(int id)
     {
         var movieDTO = await _context.Tbl_Movie
             .ProjectTo<MovieDTO>(_mapper.ConfigurationProvider)
@@ -62,7 +64,7 @@ public class MovieController : ControllerBase
     }
 
     [HttpGet("selectLoading/{id:int}")]
-    public async Task<ActionResult> GetSelectLoading (int id)
+    public async Task<ActionResult> GetSelectLoading(int id)
     {
         var movieDTO = await _context.Tbl_Movie.Select(m => new
         {
@@ -80,7 +82,7 @@ public class MovieController : ControllerBase
     }
 
     [HttpGet("explicitLoading/{id:int}")]
-    public async Task<ActionResult<MovieDTO>> GetExplicit (int id)
+    public async Task<ActionResult<MovieDTO>> GetExplicit(int id)
     {
         var movie = await _context.Tbl_Movie.FirstOrDefaultAsync(m => m.Id == id);
 
@@ -105,7 +107,7 @@ public class MovieController : ControllerBase
     }
 
     [HttpGet("groupedByClinema")]
-    public async Task<ActionResult> GetGroupedByClinema ()
+    public async Task<ActionResult> GetGroupedByClinema()
     {
         var groupedMovies = await _context.Tbl_Movie.GroupBy(m => m.InCinemas).Select(g => new
         {
@@ -119,7 +121,7 @@ public class MovieController : ControllerBase
 
 
     [HttpGet("groupedByGenresCount")]
-    public async Task<ActionResult> GetGroupedByGenresCount ()
+    public async Task<ActionResult> GetGroupedByGenresCount()
     {
         var groupedByGenresCount = await _context.Tbl_Movie.GroupBy(m => m.Genres.Count()).Select(g => new
         {
@@ -134,7 +136,7 @@ public class MovieController : ControllerBase
 
 
     [HttpGet("filter")]
-    public async Task<ActionResult<IEnumerable<MovieDTO>>> Filter ([FromQuery] MovieFilterDTO filter)
+    public async Task<ActionResult<IEnumerable<MovieDTO>>> Filter([FromQuery] MovieFilterDTO filter)
     {
         var moviesQueryable = _context.Tbl_Movie.AsQueryable();
 
@@ -167,6 +169,39 @@ public class MovieController : ControllerBase
 
         return _mapper.Map<List<MovieDTO>>(movies);
 
+    }
+
+
+    [HttpPost]
+    public async Task<ActionResult> Post(CreateMovieDTO createMovieDTO)
+    {
+        var movie = _mapper.Map<MovieEntity>(createMovieDTO);
+
+        movie.Genres.ForEach(g => _context.Entry(g).State = EntityState.Unchanged); // 不要再次建立 Genres
+
+        movie.CinemaHalls.ForEach(ch => _context.Entry(ch).State = EntityState.Unchanged); // 不要再次建立 CinemaHall
+
+        if (movie.MovieActors is not null)
+        {
+            for (int i = 0; i < movie.MovieActors.Count; i++)
+            {
+                movie.MovieActors[i].Order = i + 1;
+            }
+        }
+
+
+        _context.Add(movie);
+
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
+
+    [HttpGet("movieWithCountUseView")]
+    public async Task<IEnumerable<MovieWithCount>> Get()
+    {
+        return await _context.Set<MovieWithCount>().ToListAsync();
     }
 
 

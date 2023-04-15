@@ -4,6 +4,7 @@ using EFCoreMovie;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace EFCoreMovie.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230415030556_PersonAndMessage")]
+    partial class PersonAndMessage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -151,38 +154,6 @@ namespace EFCoreMovie.Migrations
                             DateOfBirth = new DateTime(1964, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Keanu Reeves"
                         });
-                });
-
-            modelBuilder.Entity("EFCoreMovie.Entities.CinemaDetailEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CinemaId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CodeOfConduct")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<string>("History")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<string>("Missions")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<string>("Values")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CinemaId");
-
-                    b.ToTable("Tbl_Cinema", (string)null);
                 });
 
             modelBuilder.Entity("EFCoreMovie.Entities.CinemaEntity", b =>
@@ -385,9 +356,6 @@ namespace EFCoreMovie.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.ToTable("Tbl_Genre");
 
                     b.HasData(
@@ -416,48 +384,6 @@ namespace EFCoreMovie.Migrations
                             Id = 5,
                             Name = "Drama"
                         });
-                });
-
-            modelBuilder.Entity("EFCoreMovie.Entities.InvoiceDetailEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("InvoiceId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Product")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InvoiceId");
-
-                    b.ToTable("Tbl_InvoiceDetail");
-                });
-
-            modelBuilder.Entity("EFCoreMovie.Entities.InvoiceEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreateAt")
-                        .HasColumnType("date");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Tbl_Invoice");
                 });
 
             modelBuilder.Entity("EFCoreMovie.Entities.Keyless.MovieWithCount", b =>
@@ -697,33 +623,6 @@ namespace EFCoreMovie.Migrations
                         });
                 });
 
-            modelBuilder.Entity("EFCoreMovie.Entities.PaymentEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("date");
-
-                    b.Property<int>("PaymentType")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Tbl_Payment");
-
-                    b.HasDiscriminator<int>("PaymentType");
-
-                    b.UseTphMappingStrategy();
-                });
-
             modelBuilder.Entity("EFCoreMovie.Entities.PersonEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -751,29 +650,6 @@ namespace EFCoreMovie.Migrations
                             Id = 2,
                             Name = "Andy"
                         });
-                });
-
-            modelBuilder.Entity("EFCoreMovie.Entities.RentMovieEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PaymentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MovieId");
-
-                    b.HasIndex("PaymentId");
-
-                    b.ToTable("RentMovieEntity");
                 });
 
             modelBuilder.Entity("GenreEntityMovieEntity", b =>
@@ -853,66 +729,6 @@ namespace EFCoreMovie.Migrations
                         });
                 });
 
-            modelBuilder.Entity("EFCoreMovie.Entities.CardPayment", b =>
-                {
-                    b.HasBaseType("EFCoreMovie.Entities.PaymentEntity");
-
-                    b.Property<string>("Last4Digits")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("char(4)");
-
-                    b.HasDiscriminator().HasValue(2);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 3,
-                            Amount = 99m,
-                            PaymentDate = new DateTime(2022, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PaymentType = 2,
-                            Last4Digits = "1234"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Amount = 22m,
-                            PaymentDate = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PaymentType = 2,
-                            Last4Digits = "9876"
-                        });
-                });
-
-            modelBuilder.Entity("EFCoreMovie.Entities.PaypalPayment", b =>
-                {
-                    b.HasBaseType("EFCoreMovie.Entities.PaymentEntity");
-
-                    b.Property<string>("EmailAddress")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.HasDiscriminator().HasValue(1);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Amount = 10m,
-                            PaymentDate = new DateTime(2022, 3, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PaymentType = 1,
-                            EmailAddress = "test@example.com"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Amount = 110m,
-                            PaymentDate = new DateTime(2022, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PaymentType = 1,
-                            EmailAddress = "cool@example.com"
-                        });
-                });
-
             modelBuilder.Entity("CinemaHallEntityMovieEntity", b =>
                 {
                     b.HasOne("EFCoreMovie.Entities.CinemaHallEntity", null)
@@ -926,21 +742,6 @@ namespace EFCoreMovie.Migrations
                         .HasForeignKey("MoviesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("EFCoreMovie.Entities.CinemaDetailEntity", b =>
-                {
-                    b.HasOne("EFCoreMovie.Entities.CinemaEntity", "Cinema")
-                        .WithMany()
-                        .HasForeignKey("CinemaId");
-
-                    b.HasOne("EFCoreMovie.Entities.CinemaEntity", null)
-                        .WithOne("CinemaDetail")
-                        .HasForeignKey("EFCoreMovie.Entities.CinemaDetailEntity", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cinema");
                 });
 
             modelBuilder.Entity("EFCoreMovie.Entities.CinemaHallEntity", b =>
@@ -957,15 +758,6 @@ namespace EFCoreMovie.Migrations
                     b.HasOne("EFCoreMovie.Entities.CinemaEntity", null)
                         .WithOne("CinemaOffer")
                         .HasForeignKey("EFCoreMovie.Entities.CinemaOfferEntity", "CinemaEntityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("EFCoreMovie.Entities.InvoiceDetailEntity", b =>
-                {
-                    b.HasOne("EFCoreMovie.Entities.InvoiceEntity", null)
-                        .WithMany()
-                        .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1008,25 +800,6 @@ namespace EFCoreMovie.Migrations
                     b.Navigation("Movie");
                 });
 
-            modelBuilder.Entity("EFCoreMovie.Entities.RentMovieEntity", b =>
-                {
-                    b.HasOne("EFCoreMovie.Entities.MovieEntity", "Movie")
-                        .WithMany()
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EFCoreMovie.Entities.PaymentEntity", "Payment")
-                        .WithMany()
-                        .HasForeignKey("PaymentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Movie");
-
-                    b.Navigation("Payment");
-                });
-
             modelBuilder.Entity("GenreEntityMovieEntity", b =>
                 {
                     b.HasOne("EFCoreMovie.Entities.GenreEntity", null)
@@ -1049,8 +822,6 @@ namespace EFCoreMovie.Migrations
 
             modelBuilder.Entity("EFCoreMovie.Entities.CinemaEntity", b =>
                 {
-                    b.Navigation("CinemaDetail");
-
                     b.Navigation("CinemaHalls");
 
                     b.Navigation("CinemaOffer");

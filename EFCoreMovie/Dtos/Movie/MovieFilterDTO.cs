@@ -1,4 +1,4 @@
-﻿namespace EFCoreMovie.Dtos;
+﻿namespace EFCoreMovie.Dtos.Movie;
 
 public class MovieFilterDTO
 {

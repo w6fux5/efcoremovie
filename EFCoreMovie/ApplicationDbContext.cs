@@ -1,4 +1,5 @@
 ﻿using EFCoreMovie.Entities;
+using EFCoreMovie.Entities.Keyless;
 using EFCoreMovie.Entities.Seeding;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -22,7 +23,10 @@ public class ApplicationDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+        modelBuilder.Entity<MovieWithCount>().ToView("MovieWithCounts");
+
         Module3Seeding.Seed(modelBuilder);
+        Module6Seeding.Seed(modelBuilder);
     }
 
     public DbSet<GenreEntity> Tbl_Genre { get; set; }
@@ -32,9 +36,28 @@ public class ApplicationDbContext : DbContext
     public DbSet<CinemaEntity> Tbl_Cinema { get; set; }
 
     public DbSet<MovieEntity> Tbl_Movie { get; set; }
+
     public DbSet<CinemaOfferEntity> Tbl_CinemaOffer { get; set; }
 
     public DbSet<CinemaHallEntity> Tbl_CinemaHall { get; set; }
 
     public DbSet<MovieActorEntity> Tbl_MoviesActors { get; set; }
+
+    public DbSet<LogEntity> Tbl_Log { get; set; }
+
+    public DbSet<PersonEntity> Tbl_Person { get; set; }
+
+    public DbSet<MessageEntity> Tbl_Message { get; set; }
+
+    public DbSet<CinemaDetailEntity> Tbl_CinemaDetail { get; set; }
+
+    public DbSet<PaymentEntity> Tbl_Payment { get; set; }
+
+    public DbSet<InvoiceEntity> Tbl_Invoice { get; set; }
+
+    public DbSet<InvoiceDetailEntity> Tbl_InvoiceDetail { get; set; }
+
+
+
+
 }

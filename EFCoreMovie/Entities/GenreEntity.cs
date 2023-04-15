@@ -6,6 +6,6 @@ public class GenreEntity
 
     public string Name { get; set; }
 
-
     public HashSet<MovieEntity> Movies { get; set; }
+
 }

@@ -1,4 +1,6 @@
-﻿namespace EFCoreMovie.Entities;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace EFCoreMovie.Entities;
 
 public class CinemaOfferEntity
 {
@@ -10,5 +12,7 @@ public class CinemaOfferEntity
 
     public decimal DiscountPercentage { get; set; }
 
-    public int CinemaId { get; set; }
+
+    [Column("CinemaId")]
+    public int CinemaEntityId { get; set; }
 }

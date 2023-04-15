@@ -1,4 +1,8 @@
-﻿namespace EFCoreMovie.Dtos;
+﻿using EFCoreMovie.Dtos.Actor;
+using EFCoreMovie.Dtos.Cinema;
+using EFCoreMovie.Dtos.Genre;
+
+namespace EFCoreMovie.Dtos.Movie;
 
 public class MovieDTO
 {

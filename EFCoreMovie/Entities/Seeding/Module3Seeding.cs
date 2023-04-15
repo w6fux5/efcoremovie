@@ -42,8 +42,8 @@ public static class Module3Seeding
 
         modelBuilder.Entity<CinemaEntity>().HasData(agora, sambil, megacentro, acropolis);
 
-        var agorraOffer = new CinemaOfferEntity { Id = 1, CinemaId = agora.Id, Begin = new DateTime(2022, 2, 22), End = new DateTime(2022, 4, 22), DiscountPercentage = 10 };
-        var acropolisOffer = new CinemaOfferEntity { Id = 2, CinemaId = acropolis.Id, Begin = new DateTime(2022, 2, 15), End = new DateTime(2022, 2, 22), DiscountPercentage = 15 };
+        var agorraOffer = new CinemaOfferEntity { Id = 1, CinemaEntityId = agora.Id, Begin = new DateTime(2022, 2, 22), End = new DateTime(2022, 4, 22), DiscountPercentage = 10 };
+        var acropolisOffer = new CinemaOfferEntity { Id = 2, CinemaEntityId = acropolis.Id, Begin = new DateTime(2022, 2, 15), End = new DateTime(2022, 2, 22), DiscountPercentage = 15 };
         modelBuilder.Entity<CinemaOfferEntity>().HasData(acropolisOffer, agorraOffer);
 
 

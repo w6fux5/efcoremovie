@@ -1,8 +1,10 @@
-﻿namespace EFCoreMovie.Dtos;
+﻿namespace EFCoreMovie.Dtos.Actor;
 
-public class GenreDTO
+public class ActorDTO
 {
     public int Id { get; set; }
 
     public string Name { get; set; }
+
+
 }

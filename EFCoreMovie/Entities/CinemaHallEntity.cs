@@ -1,4 +1,6 @@
-﻿namespace EFCoreMovie.Entities;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace EFCoreMovie.Entities;
 
 public class CinemaHallEntity
 {
@@ -8,8 +10,10 @@ public class CinemaHallEntity
 
     public decimal Cost { get; set; }
 
-    public int CinemaId { get; set; }
 
+    public int? CinemaId { get; set; }
+
+    [ForeignKey(nameof(CinemaId))]
     public CinemaEntity Cinema { get; set; }
 
     public HashSet<MovieEntity> Movies { get; set; }

@@ -12,10 +12,10 @@ public class MovieEntity
 
     public string PosterURL { get; set; }
 
-    public HashSet<GenreEntity> Genres { get; set; }
+    public List<GenreEntity> Genres { get; set; }
 
-    public HashSet<CinemaHallEntity> CinemaHalls { get; set; }
+    public List<CinemaHallEntity> CinemaHalls { get; set; }
 
-    public HashSet<MovieActorEntity> MoviesActors { get; set; }
+    public List<MovieActorEntity> MovieActors { get; set; }
 
 }

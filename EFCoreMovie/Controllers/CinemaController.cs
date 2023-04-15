@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using EFCoreMovie.Dtos;
+using EFCoreMovie.Dtos.Cinema;
+using EFCoreMovie.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
@@ -45,5 +46,80 @@ public class CinemaController : ControllerBase
             .ToListAsync();
 
         return Ok(cinemas);
+    }
+
+    [HttpPost("withDTO")]
+    public async Task<ActionResult> Post(CreateCinemaDTO createCinemaDTO)
+    {
+        var cinema = _mapper.Map<CinemaEntity>(createCinemaDTO);
+        _context.Add(cinema);
+
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> Post()
+    {
+        var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
+        var cinemaLocation = geometryFactory.CreatePoint(new Coordinate(-69.913539, 18.476256));
+
+        var newCinema = new CinemaEntity()
+        {
+            Name = "My cinema",
+            Location = cinemaLocation,
+
+            CinemaDetail = new CinemaDetailEntity()
+            {
+                History = "the history...",
+                Missions = "the missions...",
+            },
+
+            CinemaOffer = new CinemaOfferEntity()
+            {
+                DiscountPercentage = 5,
+                Begin = DateTime.Today,
+                End = DateTime.Today.AddDays(7)
+            },
+
+            CinemaHalls = new HashSet<CinemaHallEntity>()
+            {
+                new CinemaHallEntity()
+                {
+                    Cost = 200,
+                    CinemaHallType = CinemaHallTypeEnum.ThreeDimensions
+                },
+
+                 new CinemaHallEntity()
+                {
+                    Cost = 200,
+                    CinemaHallType = CinemaHallTypeEnum.TwoDimensions
+                },
+            }
+        };
+
+        _context.Add(newCinema);
+
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<ActionResult> Delete(int id)
+    {
+        var cinema = await _context.Tbl_Cinema.Include(prop => prop.CinemaHalls).FirstOrDefaultAsync(c => c.Id == id);
+
+        if (cinema is null)
+        {
+            return NotFound();
+        }
+
+        _context.Remove(cinema);
+
+        await _context.SaveChangesAsync();
+
+        return Ok();
     }
 }

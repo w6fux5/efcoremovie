@@ -9,8 +9,28 @@ namespace EFCoreMovie;
 
 public class ApplicationDbContext : DbContext
 {
+
+    public ApplicationDbContext()
+    {
+
+    }
+
     public ApplicationDbContext(DbContextOptions options) : base(options)
     {
+
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseSqlServer("name=DefaultConnection", options =>
+            {
+                options.UseNetTopologySuite();
+            });
+        }
+
+
     }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
@@ -31,8 +51,17 @@ public class ApplicationDbContext : DbContext
         Module9Seeding.Seed(modelBuilder);
 
         Scalars.RegisterFunctoins(modelBuilder);
+
+        modelBuilder.HasDbFunction(() => MovieWithCountsFunc(0));
+
+        modelBuilder.HasSequence<int>("InvoiceNumber", "Tbl_Invoice");
     }
 
+
+    public IQueryable<MovieWithCount> MovieWithCountsFunc(int movieId)
+    {
+        return FromExpression(() => MovieWithCountsFunc(movieId));
+    }
 
 
     public DbSet<GenreEntity> Tbl_Genre { get; set; }

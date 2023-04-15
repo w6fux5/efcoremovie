@@ -13,4 +13,9 @@ public class InvoiceDetailEntity
     [Precision(18, 2)]
     public decimal Price { get; set; }
 
+    public int Quantity { get; set; }
+
+    [Precision(18, 2)]
+    public decimal Total { get; set; }
+
 }

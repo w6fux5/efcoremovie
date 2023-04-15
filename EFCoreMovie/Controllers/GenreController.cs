@@ -104,4 +104,25 @@ public class GenreController : ControllerBase
 
         return Ok(genre);
     }
+
+
+    [HttpPost("concurrency_token")]
+    public async Task<ActionResult> ConcurrencyToken()
+    {
+        var genreId = 1;
+
+        // mike reads record from the db
+        var genre = await _context.Tbl_Genre.FirstOrDefaultAsync(p => p.Id == genreId);
+        genre.Name = "Mike was here";
+
+        // andy update the record in the db
+        await _context.Database.ExecuteSqlInterpolatedAsync($@"UPDATE Tbl_Genre SET Name = 'Andy was here' WHERE id = {genreId}");
+
+        // mike update the record
+        await _context.SaveChangesAsync();
+
+        return Ok();
+
+    }
+
 }

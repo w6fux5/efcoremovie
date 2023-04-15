@@ -120,4 +120,14 @@ public class InvoiceController : ControllerBase
 
         return Ok(invoies);
     }
+
+
+    [HttpGet("{invoiceId:int}/detail")]
+    public async Task<ActionResult<IEnumerable<InvoiceDetailEntity>>> GetDetail(int invoiceId)
+    {
+        return await _context.Tbl_InvoiceDetail
+            .Where(p => p.InvoiceId == invoiceId)
+            .OrderByDescending(p => p.Total)
+            .ToListAsync();
+    }
 }

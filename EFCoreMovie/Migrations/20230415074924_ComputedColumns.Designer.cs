@@ -4,6 +4,7 @@ using EFCoreMovie;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace EFCoreMovie.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230415074924_ComputedColumns")]
+    partial class ComputedColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,8 +25,6 @@ namespace EFCoreMovie.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.HasSequence<int>("InvoiceNumber", "Tbl_Invoice");
 
             modelBuilder.Entity("CinemaHallEntityMovieEntity", b =>
                 {
@@ -381,43 +382,16 @@ namespace EFCoreMovie.Migrations
                         .HasDefaultValueSql("GetDate()");
 
                     b.Property<string>("Name")
-                        .IsConcurrencyToken()
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
-
-                    b.Property<DateTime>("PeriodEnd")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasColumnName("PeriodEnd");
-
-                    b.Property<DateTime>("PeriodStart")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasColumnName("PeriodStart");
-
-                    b.Property<byte[]>("Versioin")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Tbl_Genre", (string)null);
-
-                    b.ToTable(tb => tb.IsTemporal(ttb =>
-                            {
-                                ttb.UseHistoryTable("Tbl_GenreHistory");
-                                ttb
-                                    .HasPeriodStart("PeriodStart")
-                                    .HasColumnName("PeriodStart");
-                                ttb
-                                    .HasPeriodEnd("PeriodEnd")
-                                    .HasColumnName("PeriodEnd");
-                            }));
+                    b.ToTable("Tbl_Genre");
 
                     b.HasData(
                         new
@@ -485,7 +459,7 @@ namespace EFCoreMovie.Migrations
                         new
                         {
                             Id = 3,
-                            InvoiceId = 1,
+                            InvoiceId = 2,
                             Price = 350.99m,
                             Quantity = 0,
                             Total = 0m
@@ -493,7 +467,7 @@ namespace EFCoreMovie.Migrations
                         new
                         {
                             Id = 4,
-                            InvoiceId = 1,
+                            InvoiceId = 2,
                             Price = 10m,
                             Quantity = 0,
                             Total = 0m
@@ -501,7 +475,7 @@ namespace EFCoreMovie.Migrations
                         new
                         {
                             Id = 5,
-                            InvoiceId = 1,
+                            InvoiceId = 2,
                             Price = 45.50m,
                             Quantity = 0,
                             Total = 0m
@@ -509,7 +483,7 @@ namespace EFCoreMovie.Migrations
                         new
                         {
                             Id = 6,
-                            InvoiceId = 2,
+                            InvoiceId = 3,
                             Price = 17.99m,
                             Quantity = 0,
                             Total = 0m
@@ -517,7 +491,7 @@ namespace EFCoreMovie.Migrations
                         new
                         {
                             Id = 7,
-                            InvoiceId = 2,
+                            InvoiceId = 3,
                             Price = 14m,
                             Quantity = 0,
                             Total = 0m
@@ -525,7 +499,7 @@ namespace EFCoreMovie.Migrations
                         new
                         {
                             Id = 8,
-                            InvoiceId = 2,
+                            InvoiceId = 3,
                             Price = 45m,
                             Quantity = 0,
                             Total = 0m
@@ -533,7 +507,7 @@ namespace EFCoreMovie.Migrations
                         new
                         {
                             Id = 9,
-                            InvoiceId = 2,
+                            InvoiceId = 3,
                             Price = 100m,
                             Quantity = 0,
                             Total = 0m
@@ -541,7 +515,7 @@ namespace EFCoreMovie.Migrations
                         new
                         {
                             Id = 10,
-                            InvoiceId = 3,
+                            InvoiceId = 4,
                             Price = 371m,
                             Quantity = 0,
                             Total = 0m
@@ -549,7 +523,7 @@ namespace EFCoreMovie.Migrations
                         new
                         {
                             Id = 11,
-                            InvoiceId = 3,
+                            InvoiceId = 4,
                             Price = 114.99m,
                             Quantity = 0,
                             Total = 0m
@@ -557,7 +531,7 @@ namespace EFCoreMovie.Migrations
                         new
                         {
                             Id = 12,
-                            InvoiceId = 3,
+                            InvoiceId = 4,
                             Price = 425m,
                             Quantity = 0,
                             Total = 0m
@@ -565,7 +539,7 @@ namespace EFCoreMovie.Migrations
                         new
                         {
                             Id = 13,
-                            InvoiceId = 3,
+                            InvoiceId = 4,
                             Price = 1000m,
                             Quantity = 0,
                             Total = 0m
@@ -573,7 +547,7 @@ namespace EFCoreMovie.Migrations
                         new
                         {
                             Id = 14,
-                            InvoiceId = 3,
+                            InvoiceId = 4,
                             Price = 5m,
                             Quantity = 0,
                             Total = 0m
@@ -581,7 +555,7 @@ namespace EFCoreMovie.Migrations
                         new
                         {
                             Id = 15,
-                            InvoiceId = 3,
+                            InvoiceId = 4,
                             Price = 2.99m,
                             Quantity = 0,
                             Total = 0m
@@ -589,7 +563,7 @@ namespace EFCoreMovie.Migrations
                         new
                         {
                             Id = 16,
-                            InvoiceId = 4,
+                            InvoiceId = 5,
                             Price = 50m,
                             Quantity = 0,
                             Total = 0m
@@ -607,11 +581,6 @@ namespace EFCoreMovie.Migrations
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("date");
 
-                    b.Property<int>("InvoiceNumber")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("NEXT VALUE FOR Tbl_Invoice.InvoiceNumber");
-
                     b.HasKey("Id");
 
                     b.ToTable("Tbl_Invoice");
@@ -619,27 +588,23 @@ namespace EFCoreMovie.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            CreateAt = new DateTime(2022, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            InvoiceNumber = 0
-                        },
-                        new
-                        {
                             Id = 2,
-                            CreateAt = new DateTime(2022, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            InvoiceNumber = 0
+                            CreateAt = new DateTime(2022, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 3,
-                            CreateAt = new DateTime(2022, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            InvoiceNumber = 0
+                            CreateAt = new DateTime(2022, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 4,
-                            CreateAt = new DateTime(2022, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            InvoiceNumber = 0
+                            CreateAt = new DateTime(2022, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreateAt = new DateTime(2022, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 

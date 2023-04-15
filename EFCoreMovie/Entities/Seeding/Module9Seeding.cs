@@ -6,7 +6,7 @@ namespace EFCoreMovie.Entities.Seeding
     {
         public static void Seed(ModelBuilder modelBuilder)
         {
-            var invoice1 = new InvoiceEntity() { Id = 2, CreateAt = new DateTime(2022, 1, 24) };
+            var invoice1 = new InvoiceEntity() { Id = 1, CreateAt = new DateTime(2022, 1, 24) };
 
             var detail1 = new List<InvoiceDetailEntity>()
             {
@@ -15,7 +15,7 @@ namespace EFCoreMovie.Entities.Seeding
                 new InvoiceDetailEntity(){Id = 5, InvoiceId = invoice1.Id, Price = 45.50m},
             };
 
-            var invoice2 = new InvoiceEntity() { Id = 3, CreateAt = new DateTime(2022, 1, 24) };
+            var invoice2 = new InvoiceEntity() { Id = 2, CreateAt = new DateTime(2022, 1, 24) };
 
             var detail2 = new List<InvoiceDetailEntity>()
             {
@@ -25,7 +25,7 @@ namespace EFCoreMovie.Entities.Seeding
                 new InvoiceDetailEntity(){Id = 9, InvoiceId = invoice2.Id, Price = 100},
             };
 
-            var invoice3 = new InvoiceEntity() { Id = 4, CreateAt = new DateTime(2022, 1, 24) };
+            var invoice3 = new InvoiceEntity() { Id = 3, CreateAt = new DateTime(2022, 1, 24) };
 
             var detail3 = new List<InvoiceDetailEntity>()
             {
@@ -37,7 +37,7 @@ namespace EFCoreMovie.Entities.Seeding
                 new InvoiceDetailEntity(){Id = 15, InvoiceId = invoice3.Id, Price = 2.99m},
             };
 
-            var invoice4 = new InvoiceEntity() { Id = 5, CreateAt = new DateTime(2022, 1, 24) };
+            var invoice4 = new InvoiceEntity() { Id = 4, CreateAt = new DateTime(2022, 1, 24) };
 
             var detail4 = new List<InvoiceDetailEntity>()
             {

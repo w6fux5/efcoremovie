@@ -84,6 +84,8 @@ namespace EFCoreMovie.Controllers
 
             _context.Update(actor);
 
+            //  _context.Entry(actor).Property(p => p.Name).IsModified = true; // 只更新 Name 這個 column
+
             await _context.SaveChangesAsync();
 
             return Ok();

@@ -205,4 +205,18 @@ public class MovieController : ControllerBase
     }
 
 
+    [HttpGet("movieCountUseFunc/{id:int}")]
+    public async Task<ActionResult<MovieWithCount>> GetCount(int id)
+    {
+        var result = await _context.MovieWithCountsFunc(id).FirstOrDefaultAsync();
+
+        if (result is null)
+        {
+            return NotFound();
+        }
+
+        return result;
+    }
+
+
 }
